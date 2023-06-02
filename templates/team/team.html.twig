@@ -1,0 +1,350 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Team {{ team.name }}{% endblock %}
+
+{% block body %}
+    <style>
+        .wrapper {
+            margin: 1em auto;
+            width: 95%;
+        }
+
+        .btn-label {
+            position: relative;
+            left: -12px;
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .btn-labeled {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .btn {
+            margin-bottom: 10px;
+        }
+
+
+    </style>
+    {% for flashMessage in app.session.flashbag.get('success') %}
+
+        <div class="alert  alert-success" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+
+        <div class="alert alert-danger" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="card">
+
+
+        <div class="row">
+            <div class="col-4">
+                <div class="card border-dark m-3">
+                    <div class="card-header bg-dark" style="display:flex;justify-content:space-between;">
+
+                        <p class="text-white">Current Balance<br><b>{{ team.getCurrentBalance() }}$</b></p>
+                        <a href="{{ path('app_transaction',{id:team.id}) }}"
+                           class="btn btn-outline-light">Transactions</a>
+
+
+                    </div>
+
+                    <div class="card-body text-center">
+                        <img src="https://c8.alamy.com/comp/FWRFCG/soccer-man-team-play-football-standing-player-ball-flat-drawing-illustration-FWRFCG.jpg"
+                             alt="avatar"
+                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{ team.name }}</h5>
+                        <p class="text-muted mb-1">{{ team.country }}</p>
+                        <p class="text-muted mb-4">Players Count : {{ team.getPlayersCount() }}</p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <button type="button" data-toggle="modal" data-target="#editTeam"
+                                    class="btn btn-outline-primary">Edit
+                            </button>
+                            <button type="button" data-toggle="modal" data-target="#deleteTeamAlert"
+                                    class="btn btn-outline-danger ms-1">Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="card border-dark m-3">
+                    <div class="card-header" style="display:flex;justify-content:space-between;">
+                        <h2><b>Team Players</b></h2>
+                        <a href=" {{ path('teamMarketIndex',{id:team.id}) }} " type="button" class="btn btn-info"><i
+                                    class="fa fa-plus"></i> Buy Player</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="container">
+                                <div class="table-wrapper">
+                                    <div class="table-title">
+
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>First name</th>
+                                            <th>Last name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for player in team.players %}
+
+                                            <tr>
+                                                <td>{{ player.id }}</td>
+                                                <td>{{ player.name }}</td>
+                                                <td>{{ player.surname }}</td>
+                                                <td>
+
+                                                    <button data-toggle="modal" data-target="#editPlayer"class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-pencil-square-o"></i> | Edit
+                                                    </button>
+                                                    <button data-toggle="modal" data-target="#deletePlayerAlert" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash"></i> | Delete
+                                                    </button>
+                                                    <button data-toggle="modal" data-target="#sellPlayer" class="btn btn-warning btn-sm">
+                                                        <i class="fa fa-cart-plus"></i> | Sell
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="editPlayer" tabindex="-1" role="dialog" aria-labelledby="editPlayer" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Player</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('player_edit') }}">
+                    <div class="modal-body">
+
+                        <input hidden="hidden" name="player_id" id="id">
+                        <div class="form-group">
+                            <label for="name">First Name</label>
+                            <input name="player_name" type="text" class="form-control" id="name">
+
+                            <label for="player_lastname">Last Name</label>
+                            <input name="player_lastname" type="text" class="form-control" id="player_lastname">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deletePlayerAlert" tabindex="-1" role="dialog" aria-labelledby="deleteAlert"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this
+                        player? </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('player_delete') }}">
+                    <div class="modal-body">
+
+                        <input hidden="hidden" name="player_id" id="id">
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input disabled name="player_name" type="text" class="form-control" id="name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="sellPlayer" tabindex="-1" role="dialog" aria-labelledby="sellPlayer" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selling a Player</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('player_sell') }}">
+                    <div class="modal-body">
+
+                        <input hidden="hidden" name="player_id" id="id">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input disabled name="player_name" type="text" class="form-control" id="name">
+
+                            <label for="player_price">Price</label>
+                            <input name="player_price" type="number" class="form-control"
+                                   placeholder="plz input a price" id="player_price">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="editTeam" tabindex="-1" role="dialog" aria-labelledby="editPlayer" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Team</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('team_edit',{id:team.id}) }}">
+                    <div class="modal-body">
+
+                        <input hidden="hidden" name="team_id" id="id" value="{{ team.id }}">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input name="team_name" type="text" class="form-control" id="name" value="{{ team.name }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Country</label>
+                            <input name="team_country" type="text" class="form-control" id="name"
+                                   value="{{ team.country }}">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteTeamAlert" tabindex="-1" role="dialog" aria-labelledby="deleteAlert"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure you want to delete this Team ? </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('team_delete',{id:team.id}) }}">
+                    <div class="modal-body">
+                        <input hidden="hidden" name="team_id" id="id" value="{{ team.id }}">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input disabled type="text" class="form-control" value="{{ team.name }}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('table').on('click', 'tr', function () {
+                var rowData = $(this).children("td").map(function () {
+                    return $(this).text();
+                }).get();
+                $('#editPlayer #name').val(rowData[1]); // Assuming the first column contains the name
+                $('#editPlayer #player_lastname').val(rowData[2]); // Assuming the first column contains the name
+                $('#editPlayer #id').val(rowData[0]); //
+
+                $('#deletePlayerAlert #name').val(rowData[1]); // Assuming the first column contains the name
+                $('#deletePlayerAlert #id').val(rowData[0]);
+
+                $('#sellPlayer #name').val(rowData[1]); // Assuming the first column contains the name
+                $('#sellPlayer #id').val(rowData[0]); // Assuming the first column contains the name
+            });
+        });
+
+
+        setTimeout(function () {
+            var flashMessages = document.querySelectorAll('.alert');
+            flashMessages.forEach(function (flashMessage) {
+                flashMessage.style.display = 'none';
+            });
+        }, 2000);
+    </script>
+
+{% endblock %}

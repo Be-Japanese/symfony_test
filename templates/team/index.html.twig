@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Teams{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header" style="display:flex;justify-content:space-between;">
+           <h3>Teams</h3>
+            <button data-toggle="modal" data-target="#addTeam" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> | Add Team</button>
+        </div>
+
+        <div class="card-body">
+        <div class="row  align-items-start">
+            {% for team in pagination %}
+                <div class="col-3">
+                    <div class="card text-dark bg-light  m-3" style="max-width: 18rem;">
+                        <div class="card-header" style="display:flex;justify-content:space-between;">
+                            <a href="/team/{{ team.id }}">#{{ team.id }}</a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ team.name }}</h5>
+                            <p class="card-text"> Country : {{ team.country }} <br> Players Count : {{ team.getPlayersCount() }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+    </div>
+    </div>
+
+
+
+
+
+
+    <div class="modal fade" id="addTeam" tabindex="-1" role="dialog" aria-labelledby="addTeam" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('team_add') }}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="team_name">Name</label>
+                            <input name="team_name" type="text" class="form-control" id="team_name">
+                            <label for="team_country">Country</label>
+                            <input name="team_country" type="text" class="form-control" id="team_country">
+                            <label for="openingBalance">Opening Balance</label>
+                            <input name="openingBalance" type="number" class="form-control" id="openingBalance"><br>
+                            <input type="checkbox" id="random_players" name="random_players" value="1" >
+                            <label for="random_players">Add Random 11 Players</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

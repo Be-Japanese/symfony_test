@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Market{% endblock %}
+
+{% block body %}
+    <div class="card">
+    <div class="card-header" style="display:flex;justify-content:space-between;">
+        <h3>Market</h3>
+    </div>
+    <div class="card-body">
+        <div class="row  align-items-start">
+        {% for offer in pagination %}
+            <div class="col-3">
+                <div class="card" style="width: 18rem;">
+                    <img src="https://cdn.wallpapersafari.com/12/29/UYsQ0r.jpg" class="card-img-top img-thumbnail" width="300" height="100" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.getPlayer().name }} . {{ offer.getPlayer().surname }}</h5>
+                        <p class="card-text"> Current Team : {{ offer.getPlayer().team.name }} <br> Current Team Country : {{ offer.getPlayer().team.country }}</p>
+                        {% if team_id is not defined %}
+                            <button class="btn btn-warning btn-sm w-50" onclick="myFunction()"><b>$ {{ offer.price}}</b> | <i class="fa fa-cart-plus"></i> </button>
+                        {% else %}
+                            <form action="{{ path('buy_player') }}" method="post">
+                                <input hidden="hidden" name="offer_id" value="{{ offer.id }}">
+                                <input  hidden="hidden" name="team_id" value="{{ team_id }}">
+                                <button class="btn btn-warning btn-sm w-50"><b>$ {{ offer.price}}</b> | <i class="fa fa-cart-plus"></i> </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+
+
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+    </div>
+
+
+    <script>
+        function myFunction() {
+            alert("Please Enter the Market from one of the teams page !!");
+        }
+    </script>
+
+{% endblock %}

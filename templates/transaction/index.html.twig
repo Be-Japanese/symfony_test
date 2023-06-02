@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TransactionController!{% endblock %}
+
+{% block body %}
+
+
+    {% for flashMessage in app.session.flashbag.get('error') %}
+
+        <div class="alert alert-danger" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
+
+    <div class="card">
+        <div class="card-header" style="display:flex;justify-content:space-between;">
+
+            <h3>Team Transactions</h3>
+
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped">
+             <thead>
+             <td>Id</td>
+             <td>Amount</td>
+             <td>Operation</td>
+             <td>Created At</td>
+             </thead>
+                <tbody>
+
+                {% for transaction in pagination %}
+<tr class="
+{% if transaction.amount > 0 %}
+table-success
+{%else %}
+table-danger
+{% endif %}
+">
+    <td>{{ transaction.id }}</td>
+    <td>{{ transaction.amount }}</td>
+    <td>{{ transaction.type }}</td>
+    <td>{{ transaction.getCreatedAtSting() }}</td>
+</tr>
+
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+
+
+
+
+            <div class="pagination">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        setTimeout(function() {
+            var flashMessages = document.querySelectorAll('.alert');
+            flashMessages.forEach(function(flashMessage) {
+                flashMessage.style.display = 'none';
+            });
+        }, 2000);
+    </script>
+
+
+{% endblock %}

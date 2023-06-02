@@ -1,0 +1,31 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+
+team_edit:
+    path: '/team/{id}/edit/'
+    controller: App\Controller\TeamController::edit
+
+team_delete:
+    path: '/team/{id}/delete/'
+    controller: App\Controller\TeamController::delete
+
+
+
+
+
+player_edit:
+    path: '/player/edit/'
+    controller: App\Controller\PlayerController::edit
+
+
+player_sell:
+    path: '/player/sell/'
+    controller: App\Controller\PlayerController::sell
+
+player_delete:
+    path: '/player/delete/'
+    controller: App\Controller\PlayerController::delete
